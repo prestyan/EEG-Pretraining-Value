@@ -646,4 +646,5 @@ if __name__ == "__main__":
                                 logger=[pl_loggers.TensorBoardLogger('./logs/bcic2a_shuffle/', name=f"{model_choice}_{dataset}_tb", version=f"subject{i}_FT"), 
                                         pl_loggers.CSVLogger('./logs/bcic2a_shuffle/', name=f"{model_choice}_{dataset}_csv", version=f"subject{i}_FT")])
 
-            trainer.fit(litmodel, train_loader, test_loader)
+            trainer.fit(litmodel, train_loader, valid_loader)
+            # trainer.test(litmodel, train_loader, test_loader)
