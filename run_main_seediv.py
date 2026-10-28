@@ -654,4 +654,5 @@ if __name__ == "__main__":
                             logger=[pl_loggers.TensorBoardLogger('./logs/seediv/', name=f"{model_choice}_{dataset}_tb", version=f"subject{i}"), 
                                     pl_loggers.CSVLogger('./logs/seediv/', name=f"{model_choice}_{dataset}_csv", version=f"subject{i}")])
 
-        trainer.fit(litmodel, train_loader, test_loader)
+        trainer.fit(litmodel, train_loader, valid_loader)
+        # trainer.test(litmodel, train_loader, test_loader)
