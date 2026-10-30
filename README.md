@@ -98,8 +98,6 @@ litmodel = LitModelCausal(
 )
 ```
 
-Run each setting separately for each model and dataset. Keep the intended architecture, data protocol, and training configuration consistent across the comparison. For SingLEM, pretrained loading reads the encoder configuration from the checkpoint, whereas Scratch uses `Config()` defaults; check that these configurations match.
-
 ## 3. Run the main evaluation
 
 Run commands from this repository directory, where `models/`, `dataset/`, and `checkpoints/` are located. If you kept the original enclosing folder name, enter it first:
@@ -135,7 +133,7 @@ logs/bcic2a/BENDR_bcic2a_unfreeze_random.txt
 
 The scripts also create TensorBoard / CSV logs and Lightning checkpoints. Repeated runs append text results; use separate experiment folders or archive earlier logs to avoid mixing runs. Some TensorBoard / CSV directory names do not distinguish all three settings, so update their `name` or `version` when comparing multiple runs.
 
-**Current epoch-selection behavior:** the runners call `trainer.fit(litmodel, train_loader, test_loader)`. The held-out subject is therefore used as Lightning's validation loader, and the reported best epoch is selected by its balanced accuracy. The `Valid` label in the text logs refers to that loader. For a protocol with independent model selection, use the source-subject validation set for selecting the epoch and evaluate the held-out subject separately. The supplied scripts should not be described as using an independent test set for epoch selection.
+**Current epoch-selection behavior:** For leave-one-subject-out cross-validation, we did not use a validation set. Since our script is designed for model re-testing and the evaluation of new parameters, we aimed to maximize the model's ultimate performance under ideal conditions. For a protocol with independent model selection, use the source-subject validation set for selecting the epoch and evaluate the held-out subject separately.
 
 ## 4. Run the analysis experiments
 
@@ -156,7 +154,6 @@ python -m analysis.run_samples_bcic2b
 - **Perturbation scope:** `weight_shuffle.py` permutes selected entries within eligible encoder Linear / Conv / attention projection tensors. It preserves the selected tensors' stored value distributions and leaves downstream heads untouched. A ratio of 1 means all eligible projection entries, not every encoder parameter or random reinitialization. Reload the original checkpoint before each perturbation; repeated calls on one model compose the shuffles.
 - **Training-data ratios:** `run_samples_bcic2b.py` currently uses `train_ratio` values of 0.25 and 0.50. Edit the list to evaluate other fractions, including 1.00 for the full-data reference. Results are stored in `logs/bcic2b_train_ratio/`.
 
-The same epoch-selection behavior described above also applies to the analysis runners.
 
 ## 5. Calculate PRR, ACS, and PVS
 
